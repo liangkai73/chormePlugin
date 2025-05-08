@@ -1,0 +1,47 @@
+{
+  "../../../../../@crx/manifest": {
+    "file": "assets/crx-manifest.js-B6QNHubg.js",
+    "name": "crx-manifest.js",
+    "src": "../../../../../@crx/manifest",
+    "isEntry": true
+  },
+  "_AIAssistant-!~{003}~.js": {
+    "file": "assets/AIAssistant-BUrp3408.css",
+    "src": "_AIAssistant-!~{003}~.js"
+  },
+  "_AIAssistant-wQz4aMWS.js": {
+    "file": "assets/AIAssistant-wQz4aMWS.js",
+    "name": "AIAssistant",
+    "css": [
+      "assets/AIAssistant-BUrp3408.css"
+    ]
+  },
+  "content.tsx-loader.js": {
+    "file": "assets/content.tsx-loader-BBR31Qt6.js",
+    "src": "content.tsx-loader.js"
+  },
+  "index.html": {
+    "file": "assets/popup-gIAQgCJB.js",
+    "name": "popup",
+    "src": "index.html",
+    "isEntry": true,
+    "imports": [
+      "_AIAssistant-wQz4aMWS.js"
+    ]
+  },
+  "src/background.ts": {
+    "file": "assets/background.ts-CyqKBYuI.js",
+    "name": "background.ts",
+    "src": "src/background.ts",
+    "isEntry": true
+  },
+  "src/content.tsx": {
+    "file": "assets/content.tsx-CQyC0HlK.js",
+    "name": "content.tsx",
+    "src": "src/content.tsx",
+    "isEntry": true,
+    "imports": [
+      "_AIAssistant-wQz4aMWS.js"
+    ]
+  }
+}
