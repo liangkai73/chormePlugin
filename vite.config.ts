@@ -36,6 +36,7 @@ export default defineConfig({
         popup: path.resolve(__dirname, 'index.html'),
       },
     },
+    assetsInlineLimit: 0, // 不要内联任何资源，保持所有文件的分离
   },
   esbuild: {
     jsxFactory: 'React.createElement',

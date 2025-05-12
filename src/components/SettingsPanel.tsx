@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Switch, Input, Button, Select, Divider, Card, Typography, message } from 'antd';
-import { SaveOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Form, Switch, Input, Button, Select, Divider, Card, Typography, message, Space, Tag } from 'antd';
+import { SaveOutlined, ReloadOutlined, PlusOutlined } from '@ant-design/icons';
 import { getChromeApi } from '../utils/chromeApiMock';
 
 const { Option } = Select;
@@ -9,6 +9,8 @@ const { Title, Text } = Typography;
 const SettingsPanel: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [domainInput, setDomainInput] = useState('');
+  const [allowedDomains, setAllowedDomains] = useState<string[]>([]);
   const chromeApi = getChromeApi();
 
   // 加载设置
@@ -22,7 +24,8 @@ const SettingsPanel: React.FC = () => {
             'language',
             'enableAutoDisplay',
             'theme',
-            'maxTokens'
+            'maxTokens',
+            'allowedDomains'
           ],
           (result) => {
             form.setFieldsValue({
@@ -32,6 +35,11 @@ const SettingsPanel: React.FC = () => {
               theme: result.theme || 'auto',
               maxTokens: result.maxTokens || 2000
             });
+            setAllowedDomains(result.allowedDomains || [
+              'example.com',
+              'google.com',
+              'baidu.com'
+            ]);
             setLoading(false);
           }
         );
@@ -48,7 +56,12 @@ const SettingsPanel: React.FC = () => {
   const handleSaveSettings = async (values: any) => {
     try {
       setLoading(true);
-      chromeApi.storage.sync.set(values, () => {
+      // 将域名列表与表单值合并
+      const allSettings = {
+        ...values,
+        allowedDomains
+      };
+      chromeApi.storage.sync.set(allSettings, () => {
         message.success('设置已保存');
         setLoading(false);
       });
@@ -62,7 +75,25 @@ const SettingsPanel: React.FC = () => {
   // 重置设置
   const handleResetSettings = () => {
     form.resetFields();
+    setAllowedDomains([
+      'example.com',
+      'google.com',
+      'baidu.com'
+    ]);
     message.info('设置已重置');
+  };
+
+  // 添加域名
+  const handleAddDomain = () => {
+    if (domainInput && !allowedDomains.includes(domainInput)) {
+      setAllowedDomains([...allowedDomains, domainInput]);
+      setDomainInput('');
+    }
+  };
+
+  // 删除域名
+  const handleRemoveDomain = (domain: string) => {
+    setAllowedDomains(allowedDomains.filter(d => d !== domain));
   };
 
   return (
@@ -122,6 +153,35 @@ const SettingsPanel: React.FC = () => {
             valuePropName="checked"
           >
             <Switch />
+          </Form.Item>
+          
+          <Form.Item label="允许显示悬浮图标的域名">
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <div>
+                <Input
+                  placeholder="输入域名 (example.com)"
+                  value={domainInput}
+                  onChange={e => setDomainInput(e.target.value)}
+                  onPressEnter={handleAddDomain}
+                  style={{ width: 'calc(100% - 60px)' }}
+                />
+                <Button type="primary" icon={<PlusOutlined />} onClick={handleAddDomain} style={{ marginLeft: 8 }}>
+                  添加
+                </Button>
+              </div>
+              <div style={{ marginTop: 8 }}>
+                {allowedDomains.map(domain => (
+                  <Tag
+                    key={domain}
+                    closable
+                    onClose={() => handleRemoveDomain(domain)}
+                    style={{ margin: '4px 4px 4px 0' }}
+                  >
+                    {domain}
+                  </Tag>
+                ))}
+              </div>
+            </Space>
           </Form.Item>
 
           <Form.Item>

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "AI Assistant",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An AI assistant that answers questions in a specified module window",
   "action": {
     "default_popup": "index.html",
@@ -32,14 +32,14 @@
   "content_scripts": [
     {
       "js": [
-        "assets/content.tsx-loader-CzemHjrR.js"
+        "assets/content.tsx-loader-CEbAZt7k.js"
       ],
       "matches": [
         "<all_urls>"
       ],
       "css": [
-        "src/index.css",
-        "assets/zh_CN-DFNCANr6.css"
+        "assets/zh_CN-DFNCANr6.css",
+        "assets/content-BZaaZmCZ.css"
       ]
     }
   ],
@@ -50,9 +50,10 @@
       ],
       "resources": [
         "assets/*",
-        "assets/zh_CN-BAtsxukq.js",
+        "icons/*",
+        "assets/zh_CN-BPPS6JM3.js",
         "assets/chromeApiMock-DjsLRqbx.js",
-        "assets/content.tsx-CbMFvunL.js"
+        "assets/content.tsx-DIG7KlBL.js"
       ],
       "use_dynamic_url": false
     }

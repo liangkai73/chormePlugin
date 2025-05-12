@@ -1,6 +1,6 @@
 {
   "name": "ai-assistant-chrome-extension",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Chrome extension for answering questions using AI",
   "type": "module",
   "scripts": {
