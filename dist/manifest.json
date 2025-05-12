@@ -31,33 +31,28 @@
   },
   "content_scripts": [
     {
+      "js": [
+        "assets/content.tsx-loader-CzemHjrR.js"
+      ],
       "matches": [
         "<all_urls>"
       ],
-      "js": [
-        "src/content.tsx-loader.js"
-      ],
       "css": [
-        "src/index.css"
+        "src/index.css",
+        "assets/zh_CN-DFNCANr6.css"
       ]
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": [
-        "assets/*"
-      ],
-      "matches": [
-        "<all_urls>"
-      ]
-    },
-    {
       "matches": [
         "<all_urls>"
       ],
       "resources": [
-        "**/*",
-        "*"
+        "assets/*",
+        "assets/zh_CN-BAtsxukq.js",
+        "assets/chromeApiMock-DjsLRqbx.js",
+        "assets/content.tsx-CbMFvunL.js"
       ],
       "use_dynamic_url": false
     }

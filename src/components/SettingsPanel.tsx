@@ -1,120 +1,150 @@
 import React, { useState, useEffect } from 'react';
-import { getStorageApi } from '../utils/chromeApiMock';
+import { Form, Switch, Input, Button, Select, Divider, Card, Typography, message } from 'antd';
+import { SaveOutlined, ReloadOutlined } from '@ant-design/icons';
+import { getChromeApi } from '../utils/chromeApiMock';
 
-interface Settings {
-  apiKey: string;
-  modelName: string;
-  enableAutoDisplay: boolean;
-}
+const { Option } = Select;
+const { Title, Text } = Typography;
 
 const SettingsPanel: React.FC = () => {
-  const [settings, setSettings] = useState<Settings>({
-    apiKey: '',
-    modelName: 'gpt-3.5-turbo',
-    enableAutoDisplay: true,
-  });
-  
-  const [status, setStatus] = useState<string>('');
-  // 使用我们的工具函数获取存储 API
-  const storage = getStorageApi();
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
+  const chromeApi = getChromeApi();
 
+  // 加载设置
   useEffect(() => {
-    // 从 Chrome 存储中加载设置
-    storage.sync.get(['apiKey', 'modelName', 'enableAutoDisplay'], (result) => {
-      setSettings({
-        apiKey: result.apiKey || '',
-        modelName: result.modelName || 'gpt-3.5-turbo',
-        enableAutoDisplay: result.enableAutoDisplay === undefined ? true : result.enableAutoDisplay,
-      });
-    });
-  }, []);
+    const loadSettings = async () => {
+      try {
+        setLoading(true);
+        chromeApi.storage.sync.get(
+          [
+            'apiKey',
+            'language',
+            'enableAutoDisplay',
+            'theme',
+            'maxTokens'
+          ],
+          (result) => {
+            form.setFieldsValue({
+              apiKey: result.apiKey || '',
+              language: result.language || 'zh-CN',
+              enableAutoDisplay: result.enableAutoDisplay !== false,
+              theme: result.theme || 'auto',
+              maxTokens: result.maxTokens || 2000
+            });
+            setLoading(false);
+          }
+        );
+      } catch (error) {
+        console.error('加载设置失败:', error);
+        setLoading(false);
+      }
+    };
 
-  const handleSave = () => {
-    // 保存到 Chrome 存储
-    storage.sync.set(settings, () => {
-      setStatus('设置已保存！');
-      setTimeout(() => setStatus(''), 3000);
-    });
+    loadSettings();
+  }, [form, chromeApi.storage.sync]);
+
+  // 保存设置
+  const handleSaveSettings = async (values: any) => {
+    try {
+      setLoading(true);
+      chromeApi.storage.sync.set(values, () => {
+        message.success('设置已保存');
+        setLoading(false);
+      });
+    } catch (error) {
+      console.error('保存设置失败:', error);
+      message.error('保存设置失败');
+      setLoading(false);
+    }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
-    const isCheckbox = type === 'checkbox';
-    
-    setSettings((prev) => ({
-      ...prev,
-      [name]: isCheckbox 
-        ? (e.target as HTMLInputElement).checked 
-        : value,
-    }));
+  // 重置设置
+  const handleResetSettings = () => {
+    form.resetFields();
+    message.info('设置已重置');
   };
 
   return (
-    <div className="p-4 bg-white rounded border">
-      <h2 className="text-xl font-semibold mb-4">设置</h2>
-      
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          API Key
-        </label>
-        <input
-          type="password"
-          name="apiKey"
-          value={settings.apiKey}
-          onChange={handleChange}
-          className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="输入您的 API Key"
-        />
-        <p className="text-xs text-gray-500 mt-1">
-          API Key 将安全地存储在您的浏览器中
-        </p>
-      </div>
-      
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          模型
-        </label>
-        <select
-          name="modelName"
-          value={settings.modelName}
-          onChange={handleChange}
-          className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+    <div>
+      <Card bordered={false}>
+        <Title level={5}>设置</Title>
+        <Text type="secondary">自定义AI助手的行为和外观</Text>
+        
+        <Divider />
+        
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSaveSettings}
+          initialValues={{
+            language: 'zh-CN',
+            enableAutoDisplay: true,
+            theme: 'auto',
+            maxTokens: 2000
+          }}
         >
-          <option value="gpt-3.5-turbo">GPT-3.5-Turbo</option>
-          <option value="gpt-4">GPT-4</option>
-        </select>
-      </div>
-      
-      <div className="mb-4">
-        <label className="flex items-center space-x-2 cursor-pointer">
-          <input
-            type="checkbox"
+          <Form.Item
+            name="apiKey"
+            label="API 密钥"
+            rules={[{ required: true, message: '请输入API密钥' }]}
+          >
+            <Input.Password placeholder="输入您的API密钥" />
+          </Form.Item>
+
+          <Form.Item name="language" label="语言">
+            <Select>
+              <Option value="zh-CN">中文 (简体)</Option>
+              <Option value="en-US">English</Option>
+              <Option value="ja-JP">日本語</Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item name="theme" label="主题">
+            <Select>
+              <Option value="light">浅色</Option>
+              <Option value="dark">深色</Option>
+              <Option value="auto">跟随系统</Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item name="maxTokens" label="最大令牌数">
+            <Select>
+              <Option value={1000}>1000</Option>
+              <Option value={2000}>2000</Option>
+              <Option value={4000}>4000</Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item
             name="enableAutoDisplay"
-            checked={settings.enableAutoDisplay}
-            onChange={handleChange}
-            className="rounded text-blue-500 focus:ring-blue-500"
-          />
-          <span className="text-sm font-medium text-gray-700">
-            自动显示问答窗口
-          </span>
-        </label>
-        <p className="text-xs text-gray-500 mt-1 ml-6">
-          启用后，当用户访问网页时自动显示问答窗口
-        </p>
-      </div>
-      
-      <button
-        onClick={handleSave}
-        className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
-        保存设置
-      </button>
-      
-      {status && (
-        <div className="mt-4 p-2 bg-green-100 text-green-700 rounded text-center">
-          {status}
-        </div>
-      )}
+            label="自动显示"
+            valuePropName="checked"
+          >
+            <Switch />
+          </Form.Item>
+
+          <Form.Item>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Button 
+                type="default" 
+                icon={<ReloadOutlined />} 
+                onClick={handleResetSettings}
+              >
+                重置
+              </Button>
+              <Button 
+                type="primary" 
+                htmlType="submit" 
+                loading={loading}
+                icon={<SaveOutlined />}
+              >
+                保存
+              </Button>
+            </div>
+          </Form.Item>
+        </Form>
+      </Card>
     </div>
   );
 };

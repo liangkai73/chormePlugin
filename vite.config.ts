@@ -22,6 +22,13 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // 移除additionalData，避免重复导入
+      },
+    },
+  },
   build: {
     outDir: 'dist',
     rollupOptions: {

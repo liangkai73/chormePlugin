@@ -173,7 +173,7 @@ export const getChromeApi = () => {
     runtime: mockRuntime,
     tabs: mockTabs,
     // 可以根据需要添加更多模拟 API
-  } as typeof chrome;
+  } as unknown as typeof chrome;
 };
 
 // 导出单独的存储 API 工具函数（更简单的用法）

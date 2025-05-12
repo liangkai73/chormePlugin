@@ -1,54 +1,52 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import AIAssistant from './AIAssistant';
-import { getStorageApi } from '../utils/chromeApiMock';
+import { Layout, Button, Typography, Tooltip } from 'antd';
+import { CloseOutlined, SettingOutlined } from '@ant-design/icons';
+
+const { Header, Content, Footer } = Layout;
+const { Title } = Typography;
 
 const ContentApp: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(true);
-  const [isMinimized, setIsMinimized] = useState(false);
-  
-  // 使用我们的工具函数获取存储 API
-  const storage = getStorageApi();
-  
-  // 初始化时检查设置
-  useEffect(() => {
-    storage.sync.get(['enableAutoDisplay'], (result) => {
-      setIsOpen(result.enableAutoDisplay !== false);
-    });
-  }, []);
+  const [showSettings, setShowSettings] = useState(false);
 
-  if (!isOpen) return null;
+  const handleClose = () => {
+    const container = document.getElementById('ai-assistant-container');
+    if (container) {
+      container.style.display = 'none';
+    }
+  };
 
   return (
-    <div className="bg-white w-full h-full flex flex-col rounded-lg overflow-hidden shadow-lg">
-      <div 
-        className="bg-blue-600 text-white p-2 flex justify-between items-center cursor-move"
-        onMouseDown={(e) => {
-          // 拖动逻辑可以在这里实现
-        }}
-      >
-        <span className="font-medium">AI 助手</span>
-        <div className="flex space-x-2">
-          <button 
-            onClick={() => setIsMinimized(!isMinimized)} 
-            className="p-1 hover:bg-blue-500 rounded"
-          >
-            {isMinimized ? '□' : '_'}
-          </button>
-          <button 
-            onClick={() => setIsOpen(false)} 
-            className="p-1 hover:bg-blue-500 rounded"
-          >
-            ✕
-          </button>
+    <Layout className="app-container">
+      <Header className="app-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Title level={4} style={{ margin: 0 }}>AI 助手</Title>
+        <div>
+          <Tooltip title="设置">
+            <Button 
+              type="text" 
+              icon={<SettingOutlined />} 
+              onClick={() => setShowSettings(!showSettings)}
+              style={{ marginRight: 8 }}
+            />
+          </Tooltip>
+          <Tooltip title="关闭">
+            <Button 
+              type="text" 
+              icon={<CloseOutlined />} 
+              onClick={handleClose}
+            />
+          </Tooltip>
         </div>
-      </div>
+      </Header>
       
-      {!isMinimized && (
-        <div className="flex-1 overflow-hidden p-4">
-          <AIAssistant />
-        </div>
-      )}
-    </div>
+      <Content className="app-content">
+        <AIAssistant />
+      </Content>
+      
+      <Footer className="app-footer">
+        <Typography.Text type="secondary">AI Assistant v1.0.0</Typography.Text>
+      </Footer>
+    </Layout>
   );
 };
 

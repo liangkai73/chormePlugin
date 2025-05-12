@@ -1,43 +1,55 @@
 import React, { useState } from 'react';
 import AIAssistant from './AIAssistant';
 import SettingsPanel from './SettingsPanel';
+import { Layout, Menu, Typography } from 'antd';
+import { MessageOutlined, SettingOutlined } from '@ant-design/icons';
+
+const { Header, Content, Footer } = Layout;
+const { Title } = Typography;
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'assistant' | 'settings'>('assistant');
 
+  const handleMenuClick = (key: string) => {
+    setActiveTab(key as 'assistant' | 'settings');
+  };
+
   return (
-    <div className="p-4 h-full flex flex-col bg-gray-50">
-      <header className="mb-4">
-        <h1 className="text-2xl font-bold text-gray-800">AI Assistant</h1>
-      </header>
+    <Layout className="app-container">
+      <Header className="app-header">
+        <Title level={4} style={{ margin: 0 }}>AI Assistant</Title>
+      </Header>
       
-      <div className="flex border-b mb-4">
-        <button 
-          className={`px-4 py-2 ${activeTab === 'assistant' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}
-          onClick={() => setActiveTab('assistant')}
-        >
-          AI Assistant
-        </button>
-        <button 
-          className={`px-4 py-2 ${activeTab === 'settings' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}
-          onClick={() => setActiveTab('settings')}
-        >
-          Settings
-        </button>
-      </div>
+      <Menu
+        mode="horizontal"
+        selectedKeys={[activeTab]}
+        onClick={({ key }) => handleMenuClick(key)}
+        items={[
+          {
+            key: 'assistant',
+            icon: <MessageOutlined />,
+            label: 'AI助手',
+          },
+          {
+            key: 'settings',
+            icon: <SettingOutlined />,
+            label: '设置',
+          },
+        ]}
+      />
       
-      <div className="flex-1 overflow-auto">
+      <Content className="app-content">
         {activeTab === 'assistant' ? (
           <AIAssistant />
         ) : (
           <SettingsPanel />
         )}
-      </div>
+      </Content>
       
-      <footer className="mt-4 text-center text-sm text-gray-500">
-        AI Assistant v1.0.0
-      </footer>
-    </div>
+      <Footer className="app-footer">
+        <Typography.Text type="secondary">AI Assistant v1.0.0</Typography.Text>
+      </Footer>
+    </Layout>
   );
 };
 

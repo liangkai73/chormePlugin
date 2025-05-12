@@ -1,10 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import ContentApp from './components/ContentApp';
 import { isChromeExtension, getChromeApi } from './utils/chromeApiMock';
 // 在开发环境中导入模拟上下文菜单
 import './utils/mockContextMenu';
+
+// 引入全局样式
+import './styles/global.scss';
+
+// 引入Ant Design ConfigProvider
+import { ConfigProvider } from 'antd';
+import zhCN from 'antd/locale/zh_CN';
 
 // 创建容器函数
 const createAssistantContainer = () => {
@@ -16,22 +22,24 @@ const createAssistantContainer = () => {
     container.id = 'ai-assistant-container';
     document.body.appendChild(container);
 
-    // 应用样式
-    container.style.position = 'fixed';
-    container.style.bottom = '20px';
-    container.style.right = '20px';
-    container.style.width = '350px';
-    container.style.height = '500px';
-    container.style.zIndex = '9999';
-    container.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)';
-    container.style.borderRadius = '8px';
-    container.style.overflow = 'hidden';
+    // 使用SCSS类应用样式
+    container.className = 'assistant-popup';
     
     // 渲染 React 组件
     const root = ReactDOM.createRoot(container);
     root.render(
       <React.StrictMode>
-        <ContentApp />
+        <ConfigProvider
+          locale={zhCN}
+          theme={{
+            token: {
+              colorPrimary: '#1890ff',
+              borderRadius: 4,
+            },
+          }}
+        >
+          <ContentApp />
+        </ConfigProvider>
       </React.StrictMode>
     );
     
