@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import ContentApp from './components/ContentApp';
+import App from './components/App';
 import FloatingIcon from './components/FloatingIcon';
 import { isChromeExtension, getChromeApi } from './utils/chromeApiMock';
 // 在开发环境中导入模拟上下文菜单
@@ -37,16 +37,141 @@ const createAssistantContainer = () => {
     // 创建助手容器
     const container = document.createElement('div');
     container.id = 'ai-assistant-container';
+    
+    // 使用 Shadow DOM 隔离样式
+    const shadowRoot = container.attachShadow({ mode: 'open' });
+    
+    // 创建样式元素并添加到 Shadow DOM
+    const styleElement = document.createElement('style');
+    
+    // 添加必要的样式重置和基础样式
+    styleElement.textContent = `
+      /* Ant Design 基础样式重置 */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      
+      :host {
+        all: initial;
+        display: block;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 350px;
+        height: 500px;
+        z-index: 9999;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border-radius: 8px;
+        overflow: hidden;
+        background-color: white;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+          'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+      }
+      
+      .app-container {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .app-header {
+        padding: 12px 16px;
+        background-color: #1890ff;
+        color: white;
+        border-bottom: 1px solid #d9d9d9;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .app-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px;
+        background-color: white;
+      }
+      
+      .app-footer {
+        padding: 10px 16px;
+        text-align: center;
+        border-top: 1px solid #d9d9d9;
+        background-color: white;
+      }
+      
+      /* Ant Design 组件样式覆盖 */
+      .ant-btn {
+        line-height: 1.5715;
+        position: relative;
+        display: inline-block;
+        font-weight: 400;
+        white-space: nowrap;
+        text-align: center;
+        background-image: none;
+        border: 1px solid transparent;
+        box-shadow: 0 2px 0 rgba(0, 0, 0, 0.015);
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+        user-select: none;
+        touch-action: manipulation;
+        height: 32px;
+        padding: 4px 15px;
+        font-size: 14px;
+        border-radius: 2px;
+        color: rgba(0, 0, 0, 0.85);
+        background: #fff;
+        border-color: #d9d9d9;
+      }
+      
+      .ant-btn-text {
+        border-color: transparent;
+        background: transparent;
+        box-shadow: none;
+        color: inherit;
+      }
+      
+      .ant-typography {
+        color: inherit;
+        font-size: 14px;
+      }
+      
+      h4.ant-typography {
+        font-size: 20px;
+        margin: 0;
+      }
+      
+      /* 滚动条样式 */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        background-color: #d9d9d9;
+        border-radius: 3px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background-color: #f5f5f5;
+      }
+    `;
+    
+    shadowRoot.appendChild(styleElement);
+    
+    // 创建内容容器
+    const contentContainer = document.createElement('div');
+    contentContainer.className = 'assistant-popup';
+    shadowRoot.appendChild(contentContainer);
+    
     document.body.appendChild(container);
-
-    // 使用SCSS类应用样式
-    container.className = 'assistant-popup';
     
     // 默认隐藏
     container.style.display = 'none';
     
     // 渲染 React 组件
-    const root = ReactDOM.createRoot(container);
+    const root = ReactDOM.createRoot(contentContainer);
     root.render(
       <React.StrictMode>
         <ConfigProvider
@@ -58,7 +183,7 @@ const createAssistantContainer = () => {
             },
           }}
         >
-          <ContentApp />
+          <App />
         </ConfigProvider>
       </React.StrictMode>
     );
@@ -113,10 +238,59 @@ const createFloatingIcon = () => {
     // 创建图标容器
     const iconContainer = document.createElement('div');
     iconContainer.id = 'ai-assistant-floating-icon';
+    
+    // 使用 Shadow DOM 隔离样式
+    const shadowRoot = iconContainer.attachShadow({ mode: 'open' });
+    
+    // 添加样式
+    const styleElement = document.createElement('style');
+    styleElement.textContent = `
+      :host {
+        all: initial;
+        display: block;
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+      }
+      
+      .floating-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #1890ff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+        border: 2px solid white;
+      }
+      
+      .floating-icon:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        transform: scale(1.05);
+      }
+      
+      .floating-icon img {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+      }
+    `;
+    
+    shadowRoot.appendChild(styleElement);
+    
+    // 创建内容容器
+    const iconContent = document.createElement('div');
+    iconContent.className = 'icon-container';
+    shadowRoot.appendChild(iconContent);
+    
     document.body.appendChild(iconContainer);
     
     // 渲染悬浮图标
-    const root = ReactDOM.createRoot(iconContainer);
+    const root = ReactDOM.createRoot(iconContent);
     root.render(
       <React.StrictMode>
         <FloatingIcon onIconClick={toggleAssistant} />
@@ -172,7 +346,7 @@ const setupMessageListener = () => {
       // 处理分析选中文本的功能
       console.log('分析文本:', message.text);
       // 显示助手并添加处理逻辑
-      if (container.style.display === 'none') {
+      if (container && container.style.display === 'none') {
         container.style.display = 'block';
         
         // 当显示助手窗口时，隐藏悬浮图标

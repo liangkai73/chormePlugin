@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Tooltip } from 'antd';
+import React from 'react';
 import { getChromeApi } from '../utils/chromeApiMock';
 
 interface FloatingIconProps {
@@ -7,27 +6,7 @@ interface FloatingIconProps {
 }
 
 const FloatingIcon: React.FC<FloatingIconProps> = ({ onIconClick }) => {
-  const [isHovering, setIsHovering] = useState(false);
   const chromeApi = getChromeApi();
-
-  // 样式
-  const iconStyle: React.CSSProperties = {
-    position: 'fixed',
-    top: '20px',
-    right: '20px',
-    width: '40px',
-    height: '40px',
-    borderRadius: '50%',
-    backgroundColor: '#1890ff',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    cursor: 'pointer',
-    zIndex: 9999,
-    boxShadow: isHovering ? '0 4px 12px rgba(0, 0, 0, 0.25)' : '0 2px 8px rgba(0, 0, 0, 0.15)',
-    transition: 'box-shadow 0.3s ease',
-    border: '2px solid white'
-  };
 
   const handleClick = () => {
     // 隐藏悬浮图标
@@ -52,20 +31,9 @@ const FloatingIcon: React.FC<FloatingIconProps> = ({ onIconClick }) => {
   };
 
   return (
-    <Tooltip title="打开 AI 助手" placement="left">
-      <div 
-        style={iconStyle}
-        onClick={handleClick}
-        onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={() => setIsHovering(false)}
-      >
-        <img 
-          src={getIconUrl()} 
-          alt="AI 助手" 
-          style={{ width: '24px', height: '24px' }} 
-        />
-      </div>
-    </Tooltip>
+    <div className="floating-icon" onClick={handleClick}>
+      <img src={getIconUrl()} alt="AI 助手" />
+    </div>
   );
 };
 

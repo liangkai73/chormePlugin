@@ -10,27 +10,30 @@
     "name": "chromeApiMock"
   },
   "_zh_CN-!~{003}~.js": {
-    "file": "assets/zh_CN-DFNCANr6.css",
+    "file": "assets/zh_CN-tQcFwRHh.css",
     "src": "_zh_CN-!~{003}~.js"
   },
-  "_zh_CN-BPPS6JM3.js": {
-    "file": "assets/zh_CN-BPPS6JM3.js",
+  "_zh_CN-AXHHXWgm.js": {
+    "file": "assets/zh_CN-AXHHXWgm.js",
     "name": "zh_CN",
+    "imports": [
+      "_chromeApiMock-DjsLRqbx.js"
+    ],
     "css": [
-      "assets/zh_CN-DFNCANr6.css"
+      "assets/zh_CN-tQcFwRHh.css"
     ]
   },
   "content.tsx-loader.js": {
-    "file": "assets/content.tsx-loader-CEbAZt7k.js",
+    "file": "assets/content.tsx-loader-BE3JzY5-.js",
     "src": "content.tsx-loader.js"
   },
   "index.html": {
-    "file": "assets/popup-B_IHLddb.js",
+    "file": "assets/popup-CMFkwEgG.js",
     "name": "popup",
     "src": "index.html",
     "isEntry": true,
     "imports": [
-      "_zh_CN-BPPS6JM3.js",
+      "_zh_CN-AXHHXWgm.js",
       "_chromeApiMock-DjsLRqbx.js"
     ]
   },
@@ -44,16 +47,16 @@
     ]
   },
   "src/content.tsx": {
-    "file": "assets/content.tsx-DIG7KlBL.js",
+    "file": "assets/content.tsx-DrZE3sts.js",
     "name": "content.tsx",
     "src": "src/content.tsx",
     "isEntry": true,
     "imports": [
-      "_zh_CN-BPPS6JM3.js",
+      "_zh_CN-AXHHXWgm.js",
       "_chromeApiMock-DjsLRqbx.js"
     ],
     "css": [
-      "assets/content-BZaaZmCZ.css"
+      "assets/content-D88Ri7uE.css"
     ]
   }
 }
