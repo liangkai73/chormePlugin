@@ -10,31 +10,34 @@
     "name": "chromeApiMock"
   },
   "_zh_CN-!~{003}~.js": {
-    "file": "assets/zh_CN-tQcFwRHh.css",
+    "file": "assets/zh_CN-Ey1TF4zq.css",
     "src": "_zh_CN-!~{003}~.js"
   },
-  "_zh_CN-AXHHXWgm.js": {
-    "file": "assets/zh_CN-AXHHXWgm.js",
+  "_zh_CN-TY4cNGCU.js": {
+    "file": "assets/zh_CN-TY4cNGCU.js",
     "name": "zh_CN",
     "imports": [
       "_chromeApiMock-DjsLRqbx.js"
     ],
     "css": [
-      "assets/zh_CN-tQcFwRHh.css"
+      "assets/zh_CN-Ey1TF4zq.css"
     ]
   },
   "content.tsx-loader.js": {
-    "file": "assets/content.tsx-loader-BE3JzY5-.js",
+    "file": "assets/content.tsx-loader-BKDoTGBG.js",
     "src": "content.tsx-loader.js"
   },
   "index.html": {
-    "file": "assets/popup-CMFkwEgG.js",
+    "file": "assets/popup-CnobC-Wl.js",
     "name": "popup",
     "src": "index.html",
     "isEntry": true,
     "imports": [
-      "_zh_CN-AXHHXWgm.js",
+      "_zh_CN-TY4cNGCU.js",
       "_chromeApiMock-DjsLRqbx.js"
+    ],
+    "css": [
+      "assets/popup-B6snAd4S.css"
     ]
   },
   "src/background.ts": {
@@ -47,12 +50,12 @@
     ]
   },
   "src/content.tsx": {
-    "file": "assets/content.tsx-DrZE3sts.js",
+    "file": "assets/content.tsx-DQ1y0po1.js",
     "name": "content.tsx",
     "src": "src/content.tsx",
     "isEntry": true,
     "imports": [
-      "_zh_CN-AXHHXWgm.js",
+      "_zh_CN-TY4cNGCU.js",
       "_chromeApiMock-DjsLRqbx.js"
     ],
     "css": [

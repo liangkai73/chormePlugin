@@ -2,6 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './components/App';
 
+// 引入 Ant Design 样式 - 仅在弹出窗口中需要
+import 'antd/dist/reset.css';
+
 // 引入全局样式
 import './styles/global.scss';
 

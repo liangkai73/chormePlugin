@@ -32,13 +32,13 @@
   "content_scripts": [
     {
       "js": [
-        "assets/content.tsx-loader-BE3JzY5-.js"
+        "assets/content.tsx-loader-BKDoTGBG.js"
       ],
       "matches": [
         "<all_urls>"
       ],
       "css": [
-        "assets/zh_CN-tQcFwRHh.css",
+        "assets/zh_CN-Ey1TF4zq.css",
         "assets/content-D88Ri7uE.css"
       ]
     }
@@ -51,9 +51,9 @@
       "resources": [
         "assets/*",
         "icons/*",
-        "assets/zh_CN-AXHHXWgm.js",
+        "assets/zh_CN-TY4cNGCU.js",
         "assets/chromeApiMock-DjsLRqbx.js",
-        "assets/content.tsx-DrZE3sts.js"
+        "assets/content.tsx-DQ1y0po1.js"
       ],
       "use_dynamic_url": false
     }

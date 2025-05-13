@@ -10,8 +10,9 @@ import './utils/mockContextMenu';
 import './styles/global.scss';
 import './styles/index.css'; // 确保 index.css 也被导入
 
-// 引入Ant Design ConfigProvider
+// 引入Ant Design ConfigProvider 和 StyleProvider
 import { ConfigProvider } from 'antd';
+import { StyleProvider } from '@ant-design/cssinjs';
 import zhCN from 'antd/locale/zh_CN';
 
 // 为TypeScript声明全局函数类型
@@ -46,18 +47,16 @@ const createAssistantContainer = () => {
     
     // 添加必要的样式重置和基础样式
     styleElement.textContent = `
-      /* Ant Design 基础样式重置 */
-      * {
+      /* 基础样式重置 */
+      *, *::before, *::after {
         box-sizing: border-box;
-        margin: 0;
-        padding: 0;
       }
       
       :host {
         all: initial;
         display: block;
         position: fixed;
-        bottom: 20px;
+        bottom: 80px;
         right: 20px;
         width: 350px;
         height: 500px;
@@ -68,6 +67,13 @@ const createAssistantContainer = () => {
         background-color: white;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
           'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+        font-size: 14px;
+        line-height: 1.5715;
+      }
+      
+      .assistant-popup {
+        height: 100%;
+        width: 100%;
       }
       
       .app-container {
@@ -101,47 +107,6 @@ const createAssistantContainer = () => {
         background-color: white;
       }
       
-      /* Ant Design 组件样式覆盖 */
-      .ant-btn {
-        line-height: 1.5715;
-        position: relative;
-        display: inline-block;
-        font-weight: 400;
-        white-space: nowrap;
-        text-align: center;
-        background-image: none;
-        border: 1px solid transparent;
-        box-shadow: 0 2px 0 rgba(0, 0, 0, 0.015);
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-        user-select: none;
-        touch-action: manipulation;
-        height: 32px;
-        padding: 4px 15px;
-        font-size: 14px;
-        border-radius: 2px;
-        color: rgba(0, 0, 0, 0.85);
-        background: #fff;
-        border-color: #d9d9d9;
-      }
-      
-      .ant-btn-text {
-        border-color: transparent;
-        background: transparent;
-        box-shadow: none;
-        color: inherit;
-      }
-      
-      .ant-typography {
-        color: inherit;
-        font-size: 14px;
-      }
-      
-      h4.ant-typography {
-        font-size: 20px;
-        margin: 0;
-      }
-      
       /* 滚动条样式 */
       ::-webkit-scrollbar {
         width: 6px;
@@ -165,6 +130,13 @@ const createAssistantContainer = () => {
     contentContainer.className = 'assistant-popup';
     shadowRoot.appendChild(contentContainer);
     
+    // 加载外部CSS样式 - 助手容器
+    try {
+      // 使用 StyleProvider 处理样式，不需要手动加载
+    } catch (error) {
+      console.error('加载样式时出错:', error);
+    }
+    
     document.body.appendChild(container);
     
     // 默认隐藏
@@ -174,17 +146,20 @@ const createAssistantContainer = () => {
     const root = ReactDOM.createRoot(contentContainer);
     root.render(
       <React.StrictMode>
-        <ConfigProvider
-          locale={zhCN}
-          theme={{
-            token: {
-              colorPrimary: '#1890ff',
-              borderRadius: 4,
-            },
-          }}
-        >
-          <App />
-        </ConfigProvider>
+        <StyleProvider container={shadowRoot}>
+          <ConfigProvider
+            locale={zhCN}
+            theme={{
+              token: {
+                colorPrimary: '#1890ff',
+                borderRadius: 4,
+              },
+            }}
+            iconPrefixCls="anticon"
+          >
+            <App />
+          </ConfigProvider>
+        </StyleProvider>
       </React.StrictMode>
     );
     
@@ -245,6 +220,7 @@ const createFloatingIcon = () => {
     // 添加样式
     const styleElement = document.createElement('style');
     styleElement.textContent = `
+      /* 确保所有样式完全隔离 */
       :host {
         all: initial;
         display: block;
@@ -252,6 +228,14 @@ const createFloatingIcon = () => {
         top: 20px;
         right: 20px;
         z-index: 9999;
+        font-family: sans-serif;
+        font-size: 14px;
+        pointer-events: none;
+      }
+      
+      /* 图标容器 */
+      .icon-container {
+        pointer-events: auto;
       }
       
       .floating-icon {
@@ -287,13 +271,22 @@ const createFloatingIcon = () => {
     iconContent.className = 'icon-container';
     shadowRoot.appendChild(iconContent);
     
+    // 加载外部CSS样式 - 悬浮图标
+    try {
+      // 使用 StyleProvider 处理样式，不需要手动加载
+    } catch (error) {
+      console.error('加载样式时出错:', error);
+    }
+    
     document.body.appendChild(iconContainer);
     
     // 渲染悬浮图标
     const root = ReactDOM.createRoot(iconContent);
     root.render(
       <React.StrictMode>
-        <FloatingIcon onIconClick={toggleAssistant} />
+        <StyleProvider container={shadowRoot}>
+          <FloatingIcon onIconClick={toggleAssistant} />
+        </StyleProvider>
       </React.StrictMode>
     );
   }
